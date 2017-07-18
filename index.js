@@ -2,8 +2,12 @@ var express = require('express'); //importing express library
 var app = express();  //We are using a expressJS web server
 var request = require('request-promise');
 var mysql = require('promise-mysql');
+var pug = require('pug');
 var RedditAPI = require('../../redditCommandLine/reddit-nodejs-api/reddit');
 var bodyParser = require('body-parser');
+
+//using the pug templating engine
+app.set('view engine', 'pug');
 
 //database connection
 var dbConn = mysql.createPool({
@@ -85,8 +89,9 @@ app.get('/calculator/:operation', function(request, respond)
   }
 });
 
+//Question 4
 //Endpoint for getting reddit posts
-app.get('/posts', function(request, respond)
+/*app.get('/posts', function(request, respond)
 {
   redditFunctions.getAllPosts()
   .then(results => {
@@ -96,12 +101,11 @@ app.get('/posts', function(request, respond)
         postList = postList + 
                   ` <li class="post-item">
                       <h2 class="post-item__title">
-                        <a href="${post.url}">${post.title}</a>
+                        <a href=${post.url}> ${post.title}</a>
                       </h2>
                         <p>Created by ${post.userData.userName}</p>
-                    </li> `
-      })
-      //second send them
+                    </li> `;
+      });
       respond.send(`<!DOCTYPE html>
                     <body>
                       <div id="posts">
@@ -112,10 +116,11 @@ app.get('/posts', function(request, respond)
                       </div>
                     </body>`);
   });
-});
+})*/;
 
-//Endpoint for /new-post
-app.get('/new-post', function(request, respond) {
+//Q5 Endpoint for /new-post
+//This code doesnt use pug
+/*app.get('/new-post', function(request, respond) {
     respond.send(`<form action="/createPost" method="POST">
                     <p>
                       <input type="text" name="url" placeholder="Enter a URL to content">
@@ -125,9 +130,9 @@ app.get('/new-post', function(request, respond) {
                     </p>
                     <button type="submit">Create!</button>
                   </form>`);
-});
+});*/
 
-//Endpoint for /createPost
+//Q6 Endpoint for /createPost
 //creating a urlEncoded bodyParser
 // create application/x-www-form-urlEncoded body parser
 var urlEncodedBodyParser = bodyParser.urlencoded({ extended: false }); 
@@ -152,6 +157,21 @@ app.post('/createPost', urlEncodedBodyParser, function(request, respond) {
         console.log(error);
         throw error;
       });
+});
+
+
+//Q7
+//Part 1, Solving Q5 with pug
+app.get('/new-post', function(request, respond) {
+  respond.render('create-content');
+});
+
+//Part-2, Solving Q4 with pug
+app.get('/posts', function(request, respond) {
+  redditFunctions.getAllPosts()
+    .then(results => {
+      respond.render('post-list', {posts: results});
+    });
 });
 
 /* YOU DON'T HAVE TO CHANGE ANYTHING BELOW THIS LINE :) */
