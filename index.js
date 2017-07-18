@@ -12,9 +12,9 @@ app.set('view engine', 'pug');
 //database connection
 var dbConn = mysql.createPool({
   host     : 'localhost',
-  user     : 'ssaquif',
+  user     : 'root',
   password : '',
-  database: 'reddit',
+  database: 'reddit2',
   connectionLimit: 10
 });
 
@@ -84,8 +84,11 @@ app.get('/calculator/:operation', function(request, respond)
     respond.send(JSON.stringify(result));
   }
   else 
-  {
-    respond.send("Invalid operation selected");
+  { 
+    //since respond is sending JSON, we are being consistent and sending the error as a JSON too.
+    respond.status(400).json({error: "Invalid Operation Selected"});
+    return; //Important
+    //respond.send("Invalid operation selected");
   }
 });
 
