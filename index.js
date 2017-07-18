@@ -156,8 +156,9 @@ app.post('/createPost', urlEncodedBodyParser, function(request, respond) {
       .then(results => 
       {
         //respond.send(JSON.stringify({success:"New Post Created"}));
+        //***When Using app.get
+        //use redirect and not send EVER
         respond.redirect('/posts');
-        //return;
       })
       .catch(error => {
         console.log(error);
