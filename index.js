@@ -138,8 +138,9 @@ app.get('/calculator/:operation', function(request, respond)
 //Q6 Endpoint for /createPost
 //creating a urlEncoded bodyParser
 // create application/x-www-form-urlEncoded body parser
+//This is a middleware
 var urlEncodedBodyParser = bodyParser.urlencoded({ extended: false }); 
-
+//The middlewear executes on every time function is called when  passed as argument
 app.post('/createPost', urlEncodedBodyParser, function(request, respond) {
     //console.log(request.body);
     //if post data is empty, send error
@@ -154,7 +155,9 @@ app.post('/createPost', urlEncodedBodyParser, function(request, respond) {
     redditFunctions.createPost(postAttributes)
       .then(results => 
       {
-        respond.send("New Post Created");
+        //respond.send(JSON.stringify({success:"New Post Created"}));
+        respond.redirect('/posts');
+        //return;
       })
       .catch(error => {
         console.log(error);
